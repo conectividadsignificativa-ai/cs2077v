@@ -2,7 +2,6 @@
 
 import { SKILLS_DATA, VALUES_DATA, type Skill, type Value } from '@/lib/game-types'
 import { TypewriterText } from '../typewriter-text'
-import { FloatingOrb } from '../floating-orb'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 
@@ -35,10 +34,10 @@ export function SkillsSelection({ onComplete }: SkillsSelectionProps) {
   }
 
   const handleContinue = () => {
-    if (phase === 'skills' && selectedSkills.length >= 1) {
+    if (phase === 'skills' && selectedSkills.length >= 2) {
       setPhase('values')
       setShowOrbs(false)
-    } else if (phase === 'values' && selectedValues.length >= 1) {
+    } else if (phase === 'values' && selectedValues.length >= 2) {
       onComplete(selectedSkills, selectedValues)
     }
   }
@@ -46,65 +45,68 @@ export function SkillsSelection({ onComplete }: SkillsSelectionProps) {
   return (
     <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-4 md:p-8">
       <div className="max-w-5xl mx-auto text-center">
-        <p className="text-lg md:text-xl text-muted-foreground mb-4">
-          Nivel 2: Futuros posibles
+        <p className="text-lg md:text-xl text-cyan-300/80 mb-2 font-mono">
+          Nivel 2: Futuros Posibles
         </p>
         
-        <h2 className="text-2xl md:text-4xl font-bold mb-8 bg-gradient-to-r from-pink-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
-          Construye tu vision del futuro
+        <h2 className="text-3xl md:text-5xl font-bold mb-8 text-cyan-400 neon-text font-mono">
+          Construye tu Vision
         </h2>
 
         {phase === 'intro' && (
-          <div className="bg-card/80 backdrop-blur-sm rounded-xl p-6 md:p-8 border border-border mb-8">
+          <div className="glass-panel rounded-2xl p-6 md:p-8 mb-8 max-w-2xl mx-auto">
             <TypewriterText
               text="Ahora es momento de mirar hacia adelante. A traves de tus elecciones, construiras implicitamente el futuro que deseas para Colombia. Selecciona los elementos que resuenan contigo."
               speed={30}
               onComplete={() => {
                 setTimeout(() => setPhase('skills'), 1000)
               }}
-              className="text-lg md:text-xl text-foreground leading-relaxed"
+              className="text-lg md:text-xl text-cyan-100 leading-relaxed"
             />
           </div>
         )}
 
         {phase === 'skills' && (
           <div className="animate-fade-in">
-            <div className="bg-card/80 backdrop-blur-sm rounded-xl p-6 border border-border mb-8">
+            <div className="glass-panel rounded-2xl p-6 mb-6 max-w-2xl mx-auto">
+              <h3 className="text-cyan-400 font-mono font-bold mb-4">HABILIDADES (elige al menos 2)</h3>
               <TypewriterText
-                text="¿Con que habilidades te identificas para construir el futuro de Colombia? (Selecciona hasta 3)"
+                text="¿Con que habilidades te identificas para construir el futuro de Colombia?"
                 speed={25}
                 onComplete={() => setShowOrbs(true)}
-                className="text-lg text-foreground"
+                className="text-lg text-cyan-100"
               />
             </div>
 
             {showOrbs && (
               <>
-                <div className="flex flex-wrap justify-center gap-6 md:gap-8 mb-8">
+                <div className="flex flex-wrap justify-center gap-3 md:gap-4 mb-8">
                   {SKILLS_DATA.map((skill, index) => (
-                    <FloatingOrb
+                    <button
                       key={skill.id}
-                      label={skill.label}
-                      colorClass={skill.color}
-                      isSelected={selectedSkills.includes(skill.id)}
                       onClick={() => handleSkillToggle(skill.id)}
-                      delay={index * 100}
-                    />
+                      className={cn(
+                        'skill-card rounded-full px-6 py-3 font-mono font-bold',
+                        'animate-fall',
+                        selectedSkills.includes(skill.id) && 'selected'
+                      )}
+                      style={{ animationDelay: `${index * 80}ms` }}
+                    >
+                      {skill.label}
+                    </button>
                   ))}
                 </div>
 
-                <p className="text-muted-foreground mb-4">
+                <p className="text-cyan-300/80 mb-4 font-mono">
                   {selectedSkills.length}/3 seleccionadas
                 </p>
 
                 <button
                   onClick={handleContinue}
-                  disabled={selectedSkills.length < 1}
+                  disabled={selectedSkills.length < 2}
                   className={cn(
-                    'px-8 py-4 font-bold rounded-xl transition-all duration-300',
-                    selectedSkills.length >= 1
-                      ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white hover:shadow-[0_0_30px_rgba(6,182,212,0.4)]'
-                      : 'bg-muted text-muted-foreground cursor-not-allowed'
+                    'cyber-btn px-10 py-4 rounded-full font-mono font-bold text-lg',
+                    selectedSkills.length < 2 && 'opacity-50 cursor-not-allowed'
                   )}
                 >
                   Continuar
@@ -116,45 +118,54 @@ export function SkillsSelection({ onComplete }: SkillsSelectionProps) {
 
         {phase === 'values' && (
           <div className="animate-fade-in">
-            <div className="bg-card/80 backdrop-blur-sm rounded-xl p-6 border border-border mb-8">
+            <div className="glass-panel rounded-2xl p-6 mb-6 max-w-2xl mx-auto">
+              <h3 className="text-cyan-400 font-mono font-bold mb-4">VALORES (elige al menos 2)</h3>
               <TypewriterText
-                text="¿Que consideras mas importante para el futuro de Colombia? (Selecciona hasta 2)"
+                text="¿Que consideras mas importante para el futuro de Colombia?"
                 speed={25}
                 onComplete={() => setShowOrbs(true)}
-                className="text-lg text-foreground"
+                className="text-lg text-cyan-100"
               />
             </div>
 
             {showOrbs && (
               <>
-                <div className="flex flex-wrap justify-center gap-6 md:gap-8 mb-8">
+                <div className="flex flex-wrap justify-center gap-3 md:gap-4 mb-8">
                   {VALUES_DATA.map((value, index) => (
-                    <FloatingOrb
+                    <button
                       key={value.id}
-                      label={value.label}
-                      colorClass={value.color}
-                      isSelected={selectedValues.includes(value.id)}
                       onClick={() => handleValueToggle(value.id)}
-                      delay={index * 100}
-                    />
+                      className={cn(
+                        'skill-card rounded-full px-6 py-3 font-mono font-bold',
+                        'animate-fall',
+                        selectedValues.includes(value.id) && 'selected'
+                      )}
+                      style={{ animationDelay: `${index * 80}ms` }}
+                    >
+                      {value.label}
+                    </button>
                   ))}
                 </div>
 
-                <p className="text-muted-foreground mb-4">
+                <p className="text-cyan-300/80 mb-4 font-mono">
                   {selectedValues.length}/2 seleccionados
                 </p>
 
                 <button
                   onClick={handleContinue}
-                  disabled={selectedValues.length < 1}
+                  disabled={selectedValues.length < 2}
                   className={cn(
-                    'px-8 py-4 font-bold rounded-xl transition-all duration-300',
-                    selectedValues.length >= 1
-                      ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:shadow-[0_0_30px_rgba(168,85,247,0.4)]'
-                      : 'bg-muted text-muted-foreground cursor-not-allowed'
+                    'px-10 py-4 rounded-full font-mono font-bold text-lg',
+                    'bg-gradient-to-r from-purple-600 to-pink-500',
+                    'border-2 border-purple-400 text-white',
+                    'hover:from-purple-500 hover:to-pink-400',
+                    'transition-all duration-300',
+                    'hover:shadow-[0_0_30px_rgba(168,85,247,0.5)]',
+                    'hover:scale-105',
+                    selectedValues.length < 2 && 'opacity-50 cursor-not-allowed'
                   )}
                 >
-                  Revelar mi futuro
+                  Revelar mi Futuro
                 </button>
               </>
             )}

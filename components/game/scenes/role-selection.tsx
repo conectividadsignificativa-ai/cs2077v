@@ -16,24 +16,32 @@ export function RoleSelection({ onSelect }: RoleSelectionProps) {
   return (
     <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-4 md:p-8">
       <div className="max-w-4xl mx-auto text-center">
-        <h1 className="text-3xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-pink-400 via-purple-400 to-cyan-400 bg-clip-text text-transparent">
+        {/* Title with neon glow */}
+        <h1 className="text-4xl md:text-6xl font-bold mb-2 text-cyan-400 neon-text tracking-wider">
           COLOMBIA 2077
         </h1>
-        <p className="text-lg md:text-xl text-muted-foreground mb-8">
-          Nivel 1: Jaque a la disrupcion
+        <p className="text-lg md:text-xl text-cyan-300/80 mb-8 font-mono">
+          Nivel 1: Jaque a la Disrupcion
         </p>
         
-        <div className="bg-card/80 backdrop-blur-sm rounded-xl p-6 md:p-8 border border-border mb-8">
+        {/* Glass panel narrative */}
+        <div className="glass-panel rounded-2xl p-6 md:p-8 mb-8 max-w-2xl mx-auto">
           <TypewriterText
             text="Tu rol define como ves el futuro... pero no lo determina. Elige quien seras en esta historia."
             speed={40}
             onComplete={() => setShowOptions(true)}
-            className="text-lg md:text-xl text-foreground leading-relaxed"
+            className="text-lg md:text-xl text-cyan-100 leading-relaxed"
           />
+          <div className="mt-4 pt-4 border-t border-cyan-500/30">
+            <p className="text-cyan-400/80 text-sm font-mono flex items-center gap-2">
+              <span className="inline-block w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
+              GUIA: Selecciona tu identidad digital. Cada rol tiene una perspectiva unica.
+            </p>
+          </div>
         </div>
 
         {showOptions && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {ROLES.map((role, index) => (
               <button
                 key={role.id}
@@ -41,31 +49,24 @@ export function RoleSelection({ onSelect }: RoleSelectionProps) {
                 onMouseEnter={() => setHoveredRole(role.id)}
                 onMouseLeave={() => setHoveredRole(null)}
                 className={cn(
-                  'group relative overflow-hidden rounded-xl p-6',
-                  'bg-gradient-to-br from-card to-card/50',
-                  'border-2 border-border hover:border-primary',
-                  'transition-all duration-300',
-                  'hover:shadow-[0_0_30px_rgba(168,85,247,0.3)]',
-                  'hover:scale-[1.02]',
+                  'group relative overflow-hidden rounded-full px-8 py-5',
+                  'cyber-btn font-mono',
+                  'animate-fall',
                   'text-left'
                 )}
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                <div className="flex items-start gap-4">
-                  <span className="text-4xl">{role.icon}</span>
+                <div className="flex items-center gap-4">
+                  <span className="text-3xl">{role.icon}</span>
                   <div>
-                    <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+                    <h3 className="text-lg font-bold group-hover:text-black transition-colors">
                       {role.title}
                     </h3>
-                    <p className="text-sm text-muted-foreground mt-1">
+                    <p className="text-xs opacity-80 group-hover:text-black/80 transition-colors">
                       {role.description}
                     </p>
                   </div>
                 </div>
-                
-                {hoveredRole === role.id && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-transparent pointer-events-none" />
-                )}
               </button>
             ))}
           </div>
